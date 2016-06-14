@@ -62,9 +62,9 @@ class BaseCursor(object):
     _defer_warnings = False
 
     def __init__(self, connection):
-        from weakref import ref
+        from weakref import proxy 
 
-        self.connection = ref(connection)
+        self.connection = proxy(connection)
         self.description = None
         self.description_flags = None
         self.rowcount = -1
@@ -81,7 +81,7 @@ class BaseCursor(object):
     def close(self):
         """Close the cursor. No further queries will be possible."""
         try:
-            if self.connection is None or self.connection() is None:
+            if self.connection is None: # or self.connection() is None:
                 return
             while self.nextset():
                 pass
@@ -192,8 +192,8 @@ class BaseCursor(object):
 
     def _get_db(self):
         con = self.connection
-        if con is not None:
-            con = con()
+    #    if con is not None:
+    #        con = con()
         if con is None:
             raise ProgrammingError("cursor closed")
         return con
